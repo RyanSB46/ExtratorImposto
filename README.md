@@ -1,4 +1,4 @@
-# 📄 Projetinho Viny - Leitor de PDF de Tributos
+# 📄 Projeto - Leitor de PDF de Tributos
 
 Este é um projeto Node.js com Express.js para upload e análise de arquivos PDF que contenham informações tributárias de empresas. O sistema extrai dados como CNPJ, nome empresarial, receita bruta e valores de tributos como IRPJ, CSLL, PIS, COFINS, entre outros.
 
@@ -26,10 +26,7 @@ Este é um projeto Node.js com Express.js para upload e análise de arquivos PDF
 ## 🧑‍💻 Instalação e Uso
 
 1. Clone o repositório:
-   ```bash
-   git clone https://github.com/seu-usuario/projetinho-viny.git
-   cd projetinho-viny
-   ```
+  
 
 2. Instale as dependências:
    ```bash
@@ -87,7 +84,7 @@ curl -X POST http://localhost:3000/upload \
 ## 📁 Estrutura do Projeto
 
 ```
-projetinho-viny/
+
 ├── uploads/              # Pasta onde os arquivos PDF são temporariamente armazenados
 ├── server.js             # Servidor principal Express
 ├── package.json          # Configurações do projeto e dependências
