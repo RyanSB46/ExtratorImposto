@@ -1,20 +1,30 @@
 {
-  "name": "projetinho-viny",
-  "version": "1.0.0",
-  "main": "index.js",
+  "name": "extrator-imposto",
+  "version": "1.1.0",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "pdf",
+    "extrator",
+    "imposto",
+    "tributos"
+  ],
+  "author": "Ryan Sena",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
     "express": "^4.18.2",
     "multer": "^1.4.5-lts.1",
     "pdf-parse": "^1.1.1",
     "pdfjs-dist": "^5.0.375"
   },
-  "description": ""
+  "description": "Sistema de extração de informações tributárias de PDFs de empresas",
+  "engines": {
+    "node": ">=14.0.0"
+  }
 }

@@ -1,64 +1,122 @@
-# 📄 Projeto - Leitor de PDF de Tributos
+﻿#  Extrator de Informações Tributárias - PDF
 
-Este é um projeto Node.js com Express.js para upload e análise de arquivos PDF que contenham informações tributárias de empresas. O sistema extrai dados como CNPJ, nome empresarial, receita bruta e valores de tributos como IRPJ, CSLL, PIS, COFINS, entre outros.
+Sistema completo Node.js com Express.js para upload, processamento e extração de informações tributárias de arquivos PDF de empresas brasileiras. O sistema extrai dados como CNPJ, nome empresarial, receita bruta e valores de tributos federais, estaduais e municipais.
 
-## 🚀 Funcionalidades
+##  Funcionalidades
 
-- Upload de arquivos PDF via endpoint `/upload`
-- Extração de:
+-  Upload seguro de arquivos PDF com validações
+-  Extração automática de:
   - Período de apuração
   - CNPJ da matriz
   - Nome empresarial
   - Receita bruta do período
   - Receita bruta dos 12 meses anteriores
-  - Tipo de tributação (por Anexo)
+  - Tipo de tributação (Anexo I, II, III, IV)
   - Receita Bruta informada
   - Tributos: IRPJ, CSLL, COFINS, PIS/Pasep, INSS/CPP, ICMS, IPI, ISS, Total
+-  Limpeza automática de arquivos temporários
+-  Interface moderna e responsiva
+-  Download de resultados em JSON
+-  Health check do servidor
+-  Logging estruturado
+-  Configuração via variáveis de ambiente
 
-## 📦 Tecnologias Utilizadas
+##  Segurança
 
-- [Node.js](https://nodejs.org/)
-- [Express.js](https://expressjs.com/)
-- [Multer](https://github.com/expressjs/multer) para upload de arquivos
-- [pdf-parse](https://www.npmjs.com/package/pdf-parse) para leitura do conteúdo do PDF
-- [CORS](https://www.npmjs.com/package/cors) para permitir requisições de outras origens
+- Validação de tipo de arquivo (apenas PDF)
+- Limite de tamanho de arquivo configurável (padrão: 10MB)
+- Armazenamento temporário com auto-limpeza
+- Tratamento de erros robusto
+- CORS configurável
+- Multer com proteção contra ataques
 
-## 🧑‍💻 Instalação e Uso
+##  Tecnologias
 
-1. Clone o repositório:
-  
+- [Node.js](https://nodejs.org/) - Runtime JavaScript
+- [Express.js](https://expressjs.com/) - Framework web
+- [Multer](https://github.com/expressjs/multer) - Upload de arquivos
+- [pdf-parse](https://www.npmjs.com/package/pdf-parse) - Leitura de PDF
+- [pdfjs-dist](https://www.npmjs.com/package/pdfjs-dist) - Processamento PDF
+- [CORS](https://www.npmjs.com/package/cors) - Requisições entre origens
+- [dotenv](https://www.npmjs.com/package/dotenv) - Variáveis de ambiente
 
-2. Instale as dependências:
-   ```bash
-   npm install
-   ```
+##  Instalação Rápida
 
-3. Inicie o servidor:
-   ```bash
-   npm start
-   ```
+### Pré-requisitos
+- Node.js v14+ instalado
+- npm ou yarn
 
-4. O servidor estará disponível em:
-   ```
-   http://localhost:3000
-   ```
+### Passos
 
-## 📤 Endpoint `/upload`
+1. **Clone ou navegue até o repositório:**
+\\\ash
+cd ExtratorImposto
+\\\
 
-- **Método:** `POST`
-- **Content-Type:** `multipart/form-data`
-- **Campo do arquivo:** `pdf`
+2. **Instale as dependências:**
+\\\ash
+npm install
+\\\
 
-### Exemplo com `curl`:
+3. **Configure as variáveis de ambiente:**
+\\\ash
+cp .env.example .env
+\\\
 
-```bash
+Edite o arquivo \.env\ conforme necessário:
+\\\env
+PORT=3000
+NODE_ENV=development
+MAX_FILE_SIZE=10485760
+UPLOAD_DIR=uploads
+CORS_ORIGIN=http://localhost:3000
+LOG_LEVEL=info
+\\\
+
+4. **Inicie o servidor:**
+\\\ash
+npm start
+\\\
+
+5. **Acesse a aplicação:**
+\\\
+http://localhost:3000
+\\\
+
+##  Endpoint \/upload\
+
+### Requisição
+
+- **Método:** \POST\
+- **URL:** \http://localhost:3000/upload\
+- **Content-Type:** \multipart/form-data\
+- **Campo:** \pdf\ (arquivo PDF)
+
+### Exemplo com cURL
+
+\\\ash
 curl -X POST http://localhost:3000/upload \
-  -F "pdf=@caminho/do/arquivo.pdf"
-```
+  -F "pdf=@documento.pdf"
+\\\
 
-### Retorno esperado:
+### Exemplo com JavaScript
 
-```json
+\\\javascript
+const formData = new FormData();
+formData.append('pdf', fileinput.files[0]);
+
+const response = await fetch('http://localhost:3000/upload', {
+  method: 'POST',
+  body: formData
+});
+
+const data = await response.json();
+console.log(data);
+\\\
+
+##  Resposta Esperada
+
+\\\json
 {
   "periodo_apuracao": "01/01/2024 a 31/01/2024",
   "cnpj_matriz": "12.345.678/0001-99",
@@ -79,21 +137,124 @@ curl -X POST http://localhost:3000/upload \
     "total": "3.600,00"
   }
 }
-```
+\\\
 
-## 📁 Estrutura do Projeto
+##  Health Check
 
-```
+Para verificar se o servidor está rodando:
 
-├── uploads/              # Pasta onde os arquivos PDF são temporariamente armazenados
-├── server.js             # Servidor principal Express
-├── package.json          # Configurações do projeto e dependências
-```
+\\\ash
+curl http://localhost:3000/health
+\\\
 
-## 📄 Licença
+Resposta:
+\\\json
+{
+  "status": "OK",
+  "server": "running",
+  "timestamp": "2026-01-15T10:30:00.000Z"
+}
+\\\
 
-Este projeto está licenciado sob a licença ISC.
+##  Estrutura do Projeto
+
+\\\
+ExtratorImposto/
+ index.html          # Frontend da aplicação
+ style.css           # Estilos CSS
+ server.js           # Servidor Express (backend)
+ package.json        # Dependências e scripts
+ .env.example        # Exemplo de configuração
+ .gitignore          # Arquivos ignorados pelo Git
+ README.md           # Este arquivo
+ uploads/            # Pasta de uploads (criada automaticamente)
+     .gitkeep        # Arquivo para manter a pasta no Git
+\\\
+
+##  Configuração Avançada
+
+### Variáveis de Ambiente
+
+| Variável | Padrão | Descrição |
+|----------|--------|-----------|
+| \PORT\ | 3000 | Porta do servidor |
+| \NODE_ENV\ | development | Ambiente (development/production) |
+| \MAX_FILE_SIZE\ | 10485760 | Tamanho máximo do arquivo em bytes (10MB) |
+| \UPLOAD_DIR\ | uploads | Diretório para arquivos temporários |
+| \CORS_ORIGIN\ | http://localhost:3000 | Origem CORS permitida |
+| \LOG_LEVEL\ | info | Nível de logging |
+
+### Limpeza de Uploads
+
+- Arquivos são automaticamente deletados após processamento
+- Limpeza de arquivos antigos (>1 hora) executada a cada 30 minutos
+
+##  Troubleshooting
+
+### Erro: "Servidor não está acessível"
+- Verifique se o servidor está rodando: \
+pm start\
+- Confirme que a porta 3000 está livre
+- Verifique o firewall
+
+### Erro: "Arquivo muito grande"
+- Aumente \MAX_FILE_SIZE\ no arquivo \.env\
+- Padrão atual: 10MB
+
+### Erro: "Apenas arquivos PDF são permitidos"
+- Certifique-se de que o arquivo é um PDF válido
+- Verifique se o arquivo não está corrompido
+
+### Erro: "PDF não contém texto suficiente"
+- O PDF pode ser escaneado (imagem)
+- Tente usar um PDF com texto extraível
+
+##  Scripts
+
+\\\ash
+# Iniciar o servidor
+npm start
+
+# Modo desenvolvimento (igual a npm start)
+npm run dev
+
+# Executar testes (não implementados ainda)
+npm test
+\\\
+
+##  Contribuindo
+
+Contribuições são bem-vindas! Por favor:
+1. Faça um fork
+2. Crie uma branch para sua feature (\git checkout -b feature/AmazingFeature\)
+3. Commit suas mudanças (\git commit -m 'Add some AmazingFeature'\)
+4. Push para a branch (\git push origin feature/AmazingFeature\)
+5. Abra um Pull Request
+
+##  Roadmap
+
+- [ ] Testes unitários e de integração
+- [ ] Suporte a processamento em lote
+- [ ] Banco de dados para histórico
+- [ ] Autenticação de usuários
+- [ ] Dashboard com estatísticas
+- [ ] Suporte a outros tipos de documento
+- [ ] API GraphQL
+- [ ] Containerização Docker
+
+##  Licença
+
+Este projeto está licenciado sob a licença ISC - veja o arquivo LICENSE para detalhes.
+
+##  Autor
+
+Desenvolvido por **Ryan Sena** e a equipe de desenvolvimento.
+
+##  Suporte
+
+Para reportar bugs ou solicitar features, abra uma issue no repositório.
 
 ---
 
-Desenvolvido por **Ryan Sena**
+**Última atualização:** Janeiro 2026
+**Versão:** 1.1.0
